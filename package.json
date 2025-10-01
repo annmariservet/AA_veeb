@@ -1,0 +1,30 @@
+{
+  "name": "aa_veeb",
+  "version": "1.0.0",
+  "description": "Veebiprogrammeerimise kursusel loodud veeb",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://annmariservet@github.com/annmariservet/AA_veeb.git"
+  },
+  "keywords": [
+    "Tallinna",
+    "Ülikool",
+    "DTI",
+    "veebiprogrammeerimine",
+    "Node.js",
+    "Express.js"
+  ],
+  "author": "Ann-Mari Servet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/annmariservet/AA_veeb/issues"
+  },
+  "homepage": "https://github.com/annmariservet/AA_veeb#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
