@@ -46,17 +46,19 @@ app.post("/regvisit", (req, res)=>{
 		}
 		else {
 			//faili senisele sisule lisamine
-			fs.appendFile("public/txt/visitlog.txt", req.body.nameInput + ";", (err)=>{
+			fs.appendFile("public/txt/visitlog.txt", req.body.firstNameInput + " " + req.body.lastNameInput + ", " + dateEt.longDate() + " kell " + dateEt.time() + ";", (err)=>{
 				if(err){
 					throw(err);
 				}
 				else {
 					console.log("Salvestatud!");
-					res.render("regvisit");
+					res.render("visitregistered", {firstNameInput: req.body.firstNameInput, lastNameInput: req.body.lastNameInput});
 				}
 			});
 		}
 	});
 });
 
-app.listen(5309);
+
+
+app.listen(5409);
