@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Ann-Mari Servet, veebiprogrammeerimine</title>
+	
+</head>
+<body>
+	<img src="/images/vp_banner_2025_AA.jpg" alt="Kursuse bänner">
+	<h1>Ann-Mari Servet, veebiprogrammeerimine</h1>
+	<p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+	<hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/eestifilm">Eesti filmi avaleht</a></li>
+	</ul>
+	<h2>Eesti filmiga seotud positsioonide lisamine</h2>
+	<form method="POST">
+		<label for="positionNameInput">Positsiooni nimi</label>
+		<input id="positionNameInput" type="text" name="positionNameInput" placeholder="Positsiooni nimi" required>
+		<br>
+		<label for="descriptionInput">Positsiooni kirjeldus</label>
+		<br>
+		<textarea id="descriptionInput" name="descriptionInput" rows="5" cols="100" placeholder="Kirjeldus..."></textarea>
+		<br>
+		<input id="positionSubmit" name="positionSubmit" type="submit" value="Salvesta">
+	</form>
+	<p><%= notice %></p>
+</body>
+</html>

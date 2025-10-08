@@ -6,7 +6,7 @@ const tellDateET = function(){
 
 const tellTimeET = function(){
     let timeNow = new Date();
-    return timeNow.getHours() + "." + timeNow.getMinutes() + "." + timeNow.getSeconds();
+    return timeNow.getHours() + ":" + timeNow.getMinutes() + ":" + timeNow.getSeconds();
 }
 
 const tellDayET = function(){
