@@ -3,6 +3,7 @@ const fs = require("fs");
 const bodyparser = require("body-parser");
 const dateEt = require("./src/dateTimeET");
 const textRef = "public/txt/vanasonad.txt";
+const textRef2 = "public/txt/visitlog.txt";
 //loome rakenduse, mis käivitab express raamistiku
 const app = express();
 //määran lehtede renderdaja (view engine)
@@ -46,7 +47,7 @@ app.post("/regvisit", (req, res)=>{
 		}
 		else {
 			//faili senisele sisule lisamine
-			fs.appendFile("public/txt/visitlog.txt", req.body.firstNameInput + " " + req.body.lastNameInput + ", " + dateEt.longDate() + " kell " + dateEt.time() + ";", (err)=>{
+			fs.appendFile("public/txt/visitlog.txt", req.body.firstNameInput + " " + req.body.lastNameInput + ", " + dateEt.longDate() + " kell " + dateEt.time() + ";" + "\n", (err)=>{
 				if(err){
 					throw(err);
 				}
@@ -59,6 +60,15 @@ app.post("/regvisit", (req, res)=>{
 	});
 });
 
-
+app.get("/visitlog", (req, res)=>{
+    fs.readFile(textRef2, "utf8", (err, data)=>{
+        if(err){
+            res.render("visitlog", {h2: "Külastajad", listData: ["Vabandame, hetkel ühtki külastajat ei leitud"]});
+        }
+        else {
+            res.render("visitlog", {h2: "Külastajad", listData: data.split(";")});
+        }
+    });
+});
 
 app.listen(5409);
