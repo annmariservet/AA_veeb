@@ -136,8 +136,25 @@ app.post("/eestifilm/filmiinimesed_add", (req, res)=>{
     }
 });
 
+//ametite nimekiri
+app.get("/eestifilm/ametid", (req, res)=>{
+    const sqlReq = "select * from position";
+    //conn.query
+    conn.execute(sqlReq, (err, sqlRes)=>{
+        if (err) {
+            console.log(err);
+            res.render("ametid", {positionList: []}); //[] tühi list
+        }
+        else {
+            console.log(sqlRes);
+            res.render("ametid", {positionList: sqlRes});
+        }
+    });
+});
+
+
 app.get("/eestifilm/position_add", (req, res)=>{
-    res.render("position_add");
+    res.render("position_add", {notice: "Kirjuta midagi!"});
 });
 
 app.post("/eestifilm/position_add", (req, res)=>{
@@ -146,21 +163,24 @@ app.post("/eestifilm/position_add", (req, res)=>{
         res.render("position_add", {notice: "Andmed on vigased!"});
     }
     else {
-        let description = null;
+        let positionDescription = null;
         if(req.body.descriptionInput != ""){
-            description = req.body.descriptionInput;
+            positionDescription = req.body.descriptionInput;
         }
 
-        let sqlReq = "insert into position (position_name, description) values (?,?)";
-        conn.execute(sqlReq, [req.body.positionNameInput, description], (err, sqlRes)=>{
+        let sqlReq = "INSERT INTO `position` (position_name, description) VALUES (?,?)";
+        conn.execute(sqlReq, [req.body.positionNameInput, positionDescription], (err, sqlRes)=>{
             if(err){
                 res.render("position_add", {notice: "Andmed on vigased!"});
+                console.log(err)
             }
             else {
-                res.render("position_add", {notice: "Andmed on salvestatud!"});
+                //res.render("position_add", {notice: "Andmed on salvestatud!"});
+                res.redirect("/eestifilm/ametid");
             }
         });
     }
+
 });
 
 app.listen(5309);
