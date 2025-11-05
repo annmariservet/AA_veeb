@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Ann-Mari Servet, veebiprogrammeerimine</title>
+	
+</head>
+<body>
+	<img src="/images/vp_banner_2025_AA.jpg" alt="Kursuse bänner">
+	<h1>Ann-Mari Servet, veebiprogrammeerimine</h1>
+	<p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+	<hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+		<li><a href="/eestifilm">Eesti filmi avaleht</a></li>
+		<li><a href="/eestifilm/filmid_add">Eesti filmide lisamine</a></li>
+	</ul>
+	<h2>Eesti filmid</h2>
+	<ul><% movieList.forEach(function(listItem) { %> 
+		<li><%= listItem.title %>, tuli välja aastal: <%= listItem.production_year %>, kestus minutites: <%= listItem.duration %></li>
+		<% }); %>
+	</ul>
+</body>
+</html>

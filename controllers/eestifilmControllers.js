@@ -1,12 +1,6 @@
 const mysql = require("mysql2/promise");
 const dbInfo = require("../../../vp2025config");
-
-const dbConf = {
-    host: dbInfo.configData.host,
-    user: dbInfo.configData.user,
-    password: dbInfo.configData.password,
-    database: dbInfo.configData.database
-}
+const dbConf = dbInfo.configData
 
 //@desc Home page for Estonian movie section
 //@route GET /eestifilm
@@ -68,7 +62,7 @@ const filmPeopleAddPost = async (req, res)=>{
         if(req.body.deceasedInput != ""){
         deceasedDate = req.body.deceasedInput;
         }
-        const [result] = await conn.execute(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.bornInput, deceasedDate]);
+        const [result] = await conn.execute(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.bornInput.value, deceasedDate]);
         console.log("Salvestati kirje id: " + result.insertId);
         res.render("filmiinimesed_add", {notice: "Andmed on salvestatud!"});
     }
@@ -88,22 +82,29 @@ const filmPeopleAddPost = async (req, res)=>{
 //@route GET /eestifilm/ametid
 //access public
 
-const filmPosition = (req, res)=>{
-    const sqlReq = "select * from position";
-    //conn.query
-    conn.execute(sqlReq, (err, sqlRes)=>{
-        if (err) {
-            console.log(err);
-            res.render("ametid", {positionList: []}); //[] tühi list
+const filmPosition = async (req, res)=>{
+    let conn;
+    const sqlReq = "select * from `position`";
+    try {
+        conn = await mysql.createConnection(dbConf);
+        console.log("Andmebaasiühendus loodud.");
+        const [rows, fields] = await conn.execute(sqlReq);
+        res.render("ametid", {positionList: rows});
+    }
+    catch(err) {
+        console.log("Viga: " + err);
+        res.render("ametid", {positionList: []});
+    }
+    finally {
+        if(conn){
+            await conn.end();
+            console.log("Andmebaasi ühendus suletud.");
         }
-        else {
-            console.log(sqlRes);
-            res.render("ametid", {positionList: sqlRes});
-        }
-    });
+    }
+
 };
 
-//@desc Page for professions involved in the movie industry
+//@desc Page for adding professions involved in the movie industry
 //@route GET /eestifilm/position_add
 //access public
 
@@ -111,32 +112,104 @@ const filmPositionAdd = (req, res)=>{
     res.render("position_add", {notice: "Kirjuta midagi!"});
 };
 
-//@desc Page for professions involved in the movie industry
+//@desc Page for submitting professions involved in the movie industry
 //@route GET /eestifilm/position_add
 //access public
 
-const filmPositionAddPost = (req, res)=>{
-    console.log(req.body);
-    if(!req.body.positionNameInput){
-        res.render("position_add", {notice: "Andmed on vigased!"});
+const filmPositionAddPost = async (req, res)=>{
+    let conn;
+    let sqlReq = "insert into `position` (position_name, description) values (?,?)";
+    let positionDescription = null;
+    if(req.body.descriptionInput != ""){
+        positionDescription = req.body.descriptionInput;
+        return;
     }
-    else {
-        let positionDescription = null;
-        if(req.body.descriptionInput != ""){
-            positionDescription = req.body.descriptionInput;
+    try {
+        conn = await mysql.createConnection(dbConf);
+        console.log("Andmebaasiühendus loodud.");
+        // let positionDescription = null;
+        // if(req.body.descriptionInput != ""){
+        //     positionDescription = req.body.descriptionInput;
+        // }
+        const [result] = await conn.execute(sqlReq, [req.body.positionNameInput, positionDescription]);
+        console.log("Salvestati kirje id: " + result.insertId);
+        res.render("position_add", {notice: "Andmed on salvestatud!"});
+    }
+    catch(err) {
+        console.log("Viga: " + err);
+        res.render("position_add", {notice: "Tekkis tehniline viga"});
+    }
+    finally {
+        if(conn){
+        await conn.end();
+        console.log("Andmebaasi ühendus suletud.");
         }
+    }
+};
 
-        let sqlReq = "INSERT INTO `position` (position_name, description) VALUES (?,?)";
-        conn.execute(sqlReq, [req.body.positionNameInput, positionDescription], (err, sqlRes)=>{
-            if(err){
-                res.render("position_add", {notice: "Andmed on vigased!"});
-                console.log(err)
-            }
-            else {
-                //res.render("position_add", {notice: "Andmed on salvestatud!"});
-                res.redirect("/eestifilm/ametid");
-            }
-        });
+//@desc Page for a list of Estonian movies
+//@route GET /eestifilm/filmid
+//access public
+
+const estonianMovies = async (req, res)=>{
+    let conn;
+    const sqlReq = "select * from movie";
+    try {
+        conn = await mysql.createConnection(dbConf);
+        console.log("Andmebaasiühendus loodud.");
+        const [rows, fields] = await conn.execute(sqlReq);
+        res.render("filmid", {movieList: rows});
+    }
+    catch(err) {
+        console.log("Viga: " + err);
+        res.render("filmid", {movieList: []});
+    }
+    finally {
+        if(conn){
+            await conn.end();
+            console.log("Andmebaasi ühendus suletud.");
+        }
+    }
+
+};
+
+//@desc Page for adding Estonian movies to the list
+//@route GET /eestifilm/filmid_add
+//access public
+
+const estonianMoviesAdd = (req, res)=>{
+    res.render("filmid_add", {notice: "Kirjuta midagi!"});
+};
+
+//@desc Page for submitting Estonian movies 
+//@route GET /eestifilm/position_add
+//access public
+
+const estonianMoviesAddPost = async (req, res)=>{
+    let conn;
+    let sqlReq = "insert into movie (title, description) values (?,?)";
+    let movieDescription = null;
+    if(req.body.movieDescriptionInput != ""){
+        movieDescription = req.body.movieDescriptionInput;
+        return;
+    }
+    try {
+        conn = await mysql.createConnection(dbConf);
+        console.log("Andmebaasiühendus loodud.");
+        let positionDescription = null;
+        // if(req.body.descriptionInput != ""){
+        //     positionDescription = req.body.descriptionInput;
+        // }
+        const [result] = await conn.execute(sqlReq, [req.body.movieNameInput, movieDescription]);
+        console.log("Salvestati kirje id: " + result.insertId);
+        res.render("filmid_add", {notice: "Andmed on salvestatud!"});
+    }
+    catch(err) {
+        console.log("Viga: " + err);
+        res.render("filmid_add", {notice: "Tekkis tehniline viga"});
+    }
+    finally {
+    
     }
 };
 
@@ -147,5 +220,9 @@ module.exports = {
     filmPeopleAddPost,
     filmPosition,
     filmPositionAdd,
-    filmPositionAddPost
+    filmPositionAddPost,
+    estonianMovies,
+    estonianMoviesAdd,
+    estonianMoviesAddPost
+
 };

@@ -9,7 +9,7 @@ const textRef2 = "public/txt/visitlog.txt";
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
-app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.urlencoded({extended: true}));
 
 app.get("/", (req, res)=>{
     //res.send("Express.js rakendus läks käima!");
@@ -31,7 +31,7 @@ app.get("/vanasonad", (req, res)=>{
     });
 });
 
-app.get("/regvisit", (req, res)=>{
+/* app.get("/regvisit", (req, res)=>{
     res.render("regvisit");
 });
 
@@ -55,7 +55,7 @@ app.post("/regvisit", (req, res)=>{
 			});
 		}
 	});
-});
+}); */
 
 app.get("/visitlog", (req, res)=>{
     let listData = [];
@@ -73,8 +73,16 @@ app.get("/visitlog", (req, res)=>{
     });
 });
 
+//registreerimise marsruudid
+const regvisitRouter = require("./routes/regvisitRoutes");
+app.use("/regvisit", regvisitRouter);
+
 //eestifilmi marsruudid
 const eestifilmRouter = require("./routes/eestifilmRoutes");
 app.use("/eestifilm", eestifilmRouter);
+
+//galeriipildi üles laadimise marsruudid
+const galletyphotouploadRouter = require("./routes/galleryphotouploadRoutes");
+app.use("/galleryphotoupload", galletyphotouploadRouter);
 
 app.listen(5309);
