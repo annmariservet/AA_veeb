@@ -18,5 +18,11 @@
 		<li><a href="/eestifilm">Eesti film</a></li>
 		<li><a href="/galleryphotoupload">Galeriipiltide üleslaadimine</a></li>
 	</ul>
+	
+	<% if(latestPhoto) { %>
+		<label>Viimane lisatud pilt</label>
+		<img src="/gallery/normal/<%= latestPhoto.filename %>" alt="<%= latestPhoto.alttext %>" style="max-width: 800px;">
+		<!-- <p><%= latestPhoto.alttext %></p> -->
+	<% } %>
 </body>
 </html>

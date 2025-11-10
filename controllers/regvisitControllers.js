@@ -20,7 +20,7 @@ const visitRegistrationPost = async (req, res)=>{
     try {
         file = await fs.open(textRef2, "a");
         await file.appendFile(sisend, "utf-8"); 
-        console.log("Salvestatud!")
+        //console.log("Salvestatud!")
         res.render("visitregistered", {külastaja: req.body.firstNameInput + " " + req.body.lastNameInput});
     }
      catch(err) {
@@ -31,23 +31,28 @@ const visitRegistrationPost = async (req, res)=>{
     }
 };
 
-/* app.get("/visitlog", (req, res)=>{
+//@desc Home page for viewing visit log
+//@route GET /vistlog
+//access public
+
+const visitLogPage = async (req, res)=>{
     let listData = [];
-    fs.readFile(textRef2, "utf8", (err, data)=>{
-        if(err){
-            res.render("genericlist", {h2: "Külastajad", listData: ["Vabandame, hetkel ühtki külastajat ei leitud"]});
-        }
-        else {
-            let tempListData = data.split(";");
+    let file;
+    try {
+        file = await fs.readFile(textRef2, "utf8");
+        let tempListData = file.split(";");
             for (let i = 0; i < tempListData.length - 1; i ++) {
                 listData.push(tempListData[i]); //push 
             }
-            res.render("genericlist", {h2: "Külastajad", listData: listData});
-        }
-    });
-}); */
+        res.render("genericlist", {h2: "Külastajad", listData: listData});
+    }
+    catch(err){
+        res.render("genericlist", {h2: "Külastajad", listData: ["Vabandame, hetkel ühtki külastajat ei leitud"]});
+    }
+};
 
 module.exports = {
     visitRegistrationPage,
-    visitRegistrationPost
+    visitRegistrationPost,
+    visitLogPage
 };

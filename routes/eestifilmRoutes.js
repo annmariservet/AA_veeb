@@ -11,7 +11,8 @@ const {
     filmPositionAddPost,
     estonianMovies,
     estonianMoviesAdd,
-    estonianMoviesAddPost
+    estonianMoviesAddPost,
+    //movieRelations
     
 } = require ("../controllers/eestifilmControllers");
 
@@ -25,5 +26,7 @@ router.route("/position_add").post(filmPositionAddPost);
 router.route("/filmid").get(estonianMovies);
 router.route("/filmid_add").get(estonianMoviesAdd);
 router.route("/filmid_add").post(estonianMoviesAddPost);
+//router.route("/seosed").get(movieRelations);
+
 
 module.exports = router;

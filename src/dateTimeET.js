@@ -15,4 +15,9 @@ const tellDayET = function(){
     return dayNamesET[timeNow.getDay()];
 }
 
-module.exports = {longDate: tellDateET, weekDay: tellDayET, time: tellTimeET}; //expordime {selle nimega: selle asja}
+const timeNowFormattedET = function(){
+	let timeNow = new Date();
+	return timeNow.getHours() + ":" + timeNow.getMinutes() + ":" + timeNow.getSeconds();
+}
+
+module.exports = {longDate: tellDateET, weekDay: tellDayET, time: tellTimeET, fullTime: timeNowFormattedET}; //expordime {selle nimega: selle asja}

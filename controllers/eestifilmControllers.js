@@ -182,36 +182,46 @@ const estonianMoviesAdd = (req, res)=>{
 };
 
 //@desc Page for submitting Estonian movies 
-//@route GET /eestifilm/position_add
+//@route GET /eestifilm/filmid_add
 //access public
 
 const estonianMoviesAddPost = async (req, res)=>{
     let conn;
-    let sqlReq = "insert into movie (title, description) values (?,?)";
+    let sqlReq = "insert into movie (title, production_year, duration, description) values (?,?,?,?)";
     let movieDescription = null;
+    if(!req.body.movieNameInput || !req.body.movieDurationInput || !req.body.movieProductionYearInput) {
+        res.render("filmid_add", {notice: "Andmed on vigased!"});
+        return;
+    }
     if(req.body.movieDescriptionInput != ""){
         movieDescription = req.body.movieDescriptionInput;
-        return;
     }
     try {
         conn = await mysql.createConnection(dbConf);
         console.log("Andmebaasiühendus loodud.");
-        let positionDescription = null;
         // if(req.body.descriptionInput != ""){
         //     positionDescription = req.body.descriptionInput;
         // }
-        const [result] = await conn.execute(sqlReq, [req.body.movieNameInput, movieDescription]);
+        const [result] = await conn.execute(sqlReq, [req.body.movieNameInput, req.body.movieDurationInput, req.body.movieProductionYearInput, movieDescription]);
         console.log("Salvestati kirje id: " + result.insertId);
         res.render("filmid_add", {notice: "Andmed on salvestatud!"});
     }
-    catch(err) {
+    catch(err){
         console.log("Viga: " + err);
         res.render("filmid_add", {notice: "Tekkis tehniline viga"});
     }
     finally {
-    
+        if(conn){
+            await conn.end();
+            console.log("Andmebaasi ühendus suletud.");
+        }
     }
 };
+
+//@desc Page for seeing movie, person, position relations
+//@route GET /eestifilm/seosed
+//access public
+
 
 module.exports = {
     filmHomePage,
@@ -223,6 +233,6 @@ module.exports = {
     filmPositionAddPost,
     estonianMovies,
     estonianMoviesAdd,
-    estonianMoviesAddPost
-
+    estonianMoviesAddPost,
+    //movieRelations
 };

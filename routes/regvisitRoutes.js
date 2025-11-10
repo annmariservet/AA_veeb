@@ -3,11 +3,12 @@ const router = express.Router();
 
 const {
     visitRegistrationPage,
-    visitRegistrationPost
+    visitRegistrationPost,
+    visitLogPage
 } = require ("../controllers/regvisitControllers");
 
 router.route("/").get(visitRegistrationPage);
 router.route("/").post(visitRegistrationPost);
-//router.route("/visitlog").get(viewVistors);
+router.route("/visitlog").get(visitLogPage);
 
 module.exports = router;
