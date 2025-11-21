@@ -222,6 +222,9 @@ const estonianMoviesAddPost = async (req, res)=>{
 //@route GET /eestifilm/seosed
 //access public
 
+/* const movieRelations = async (req, res)=>{
+
+} */
 
 module.exports = {
     filmHomePage,

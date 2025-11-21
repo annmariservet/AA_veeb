@@ -17,11 +17,15 @@
 		<li><a href="/regvisit">Registreeri oma külastus</a></li>
 		<li><a href="/eestifilm">Eesti film</a></li>
 		<li><a href="/galleryphotoupload">Galeriipiltide üleslaadimine</a></li>
+		<li><a href="/photogallery">Fotogalerii</a></li>
+		<li><a href="/newsupload">Uudiste üleslaadimine</a></li>
+		<li><a href="/news">Uudised</a></li>
 	</ul>
 	
 	<% if(latestPhoto) { %>
 		<label>Viimane lisatud pilt</label>
-		<img src="/gallery/normal/<%= latestPhoto.filename %>" alt="<%= latestPhoto.alttext %>" style="max-width: 800px;">
+		<br>
+		<img src="/gallery/normal/<%= latestPhoto.filename %>" alt="<%= latestPhoto.alttext %>" style="max-width: 400px;">
 		<!-- <p><%= latestPhoto.alttext %></p> -->
 	<% } %>
 </body>

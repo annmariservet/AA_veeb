@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Ann-Mari Servet, veebiprogrammeerimine</title>
+	<link rel="stylesheet" href="/style/gallery.css">
+	<script src="/script/gallery.js" defer></script>
+</head>
+<body>
+	<img src="/images/vp_banner_2025_AA.jpg" alt="Kursuse bänner">
+	<h1>Ann-Mari Servet, veebiprogrammeerimine</h1>
+	<p>See leht on loodud <a href="https://www.tlu.ee/">Tallinna Ülikoolis</a> veebiprogrammeerimise kursusel ja ei oma mõistlikku sisu.</p>
+	<hr>
+	<ul>
+		<li><a href="/">Avalehele</a></li>
+	</ul>
+	<h2>Uudised</h2>
+	<% if(newsData && newsData.length > 0) { %>
+    <% newsData.forEach(function(item) { %>
+        <article>
+            <h2><%= item.title %></h2>
+            <p><%= item.content %></p>
+            <% if(item.photo) { %>
+                <img src="/news/orig/<%= item.photo %>" alt="<%= item.photo_alt %>" style="max-width: 400px;">
+            <% } %>
+        </article>
+        <hr>
+    <% }); %>
+<% } else { %>
+    <p>Uudiseid pole saadaval.</p>
+<% } %>
+</body>
+</html>

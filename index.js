@@ -61,4 +61,16 @@ app.use("/eestifilm", eestifilmRouter);
 const galletyphotouploadRouter = require("./routes/galleryphotouploadRoutes");
 app.use("/galleryphotoupload", galletyphotouploadRouter);
 
+//fotogalerii marsruudid
+const photogalleryRouter = require("./routes/photogalleryRoutes");
+app.use("/photogallery", photogalleryRouter);
+
+//uudiste lisamise lehe marsruudid
+const newsAddRouter = require("./routes/newsAddRoutes");
+app.use("/newsupload", newsAddRouter);
+
+//uudiste kuvamise lehe marsruudid
+const newsViewRouter = require("./routes/newsViewRoutes");
+app.use("/news", newsViewRouter);
+
 app.listen(5309);

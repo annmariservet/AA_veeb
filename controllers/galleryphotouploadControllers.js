@@ -3,6 +3,7 @@ const dbInfo = require("../../../vp2025config");
 const sharp = require("sharp");
 const mysql = require("mysql2/promise");
 const dbConf = dbInfo.configData;
+const watermarkFile = "./public/images/vp_logo_small.png";
 
 //@desc Home page for uploading gallery photos
 //@route GET /galeryphotoupload
@@ -24,8 +25,19 @@ const galleryphotouploadPagePost = async (req, res)=>{
         const fileName = "vp_" + Date.now() + ".jpg";
         console.log(fileName);
         await fs.rename(req.file.path, req.file.destination + fileName);
+        //kontrollin, kas vesimärgi fail on olemas
+        const watermarkSettings = [{
+            input: watermarkFile,
+            gravity: "southeast"
+        }];
         //loon normaal mõõdus foto (800x600)
-        await sharp(req.file.destination + fileName).resize(800,600).jpeg({quality: 90}).toFile("./public/gallery/normal/" + fileName);
+        //await sharp(req.file.destination + fileName).resize(800,600).jpeg({quality: 90}).toFile("./public/gallery/normal/" + fileName);
+		 let normalImageProcessor = await sharp(req.file.destination + fileName).resize(800, 600).jpeg({quality: 90});
+        console.log("Lisan vesimÃ¤rgi" + watermarkSettings.length);    
+        if (watermarkSettings.length > 0) {
+            normalImageProcessor = await normalImageProcessor.composite(watermarkSettings);
+        }
+		await normalImageProcessor.toFile("./public/gallery/normal/" + fileName);
         //loon pisipildi mõõdus foto (100x100)
         await sharp(req.file.destination + fileName).resize(100,100).jpeg({quality: 90}).toFile("./public/gallery/thumbs/" + fileName);
         conn = await mysql.createConnection(dbConf);
