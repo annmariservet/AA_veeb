@@ -222,9 +222,24 @@ const estonianMoviesAddPost = async (req, res)=>{
 //@route GET /eestifilm/seosed
 //access public
 
-/* const movieRelations = async (req, res)=>{
+const movieRelations = async (req, res)=>{
+    let conn;
 
-} */
+    try {
+        conn = await mysql.createConnection(dbConf);
+        
+    }
+    catch{
+        console.log("Viga: " + err);
+        res.render("seosed", {notice: "Tekkis tehniline viga"});
+    }
+    finally {
+        if(conn){
+            await conn.end();
+            console.log("Andmebaasi ühendus suletud.");
+        }
+    }
+} 
 
 module.exports = {
     filmHomePage,

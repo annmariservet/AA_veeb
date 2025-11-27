@@ -5,7 +5,7 @@ const dbConf = dbInfo.configData;
 
 //@desc Home page for photo gallery
 //@route GET /photogallery
-//access public
+//access private
 
 const photogalleryPage = async (req, res)=>{
     let conn;

@@ -7,7 +7,7 @@ const watermarkFile = "./public/images/vp_logo_small.png";
 
 //@desc Home page for uploading gallery photos
 //@route GET /galeryphotoupload
-//access public
+//access private
 
 const galleryphotouploadPage = (req, res)=>{
     res.render("galleryphotoupload");
@@ -15,7 +15,7 @@ const galleryphotouploadPage = (req, res)=>{
 
 //@desc Home page for adding gallery photos
 //@route GET /galleryphotoupload
-//access public
+//access private
 
 const galleryphotouploadPagePost = async (req, res)=>{
     let conn;
