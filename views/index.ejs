@@ -23,12 +23,7 @@
 		<li><a href="/newsupload">Uudiste üleslaadimine</a></li>
 		<li><a href="/news">Uudised</a></li>
 	</ul>
-	
-	<% if(latestPhoto) { %>
-		<label>Viimane lisatud pilt</label>
-		<br>
-		<img src="/gallery/normal/<%= latestPhoto.filename %>" alt="<%= latestPhoto.alttext %>" style="max-width: 400px;">
-		<!-- <p><%= latestPhoto.alttext %></p> -->
-	<% } %>
+	<h2>Uusim avalik foto</h2>
+  	<img src="<%= imgFile %>" alt="<%= imgAlt %>">
 </body>
 </html>

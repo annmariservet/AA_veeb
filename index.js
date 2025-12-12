@@ -1,19 +1,21 @@
 const express = require("express");
+require("dotenv").config();
 const fs = require("fs");
 const bodyparser = require("body-parser");
-const mysql = require("mysql2/promise");
+//const mysql = require("mysql2/promise");
 const session = require("express-session");
 const dateEt = require("./src/dateTimeET");
-const dbInfo = require("../../vp2025config");
-const dbConf = dbInfo.configData;
-const dbSession = dbInfo.sessionData;
+//const dbInfo = require("../../vp2025config");
+//const dbConf = dbInfo.configData;
+//const dbSession = dbInfo.sessionData;
+const pool = require("./src/dbPool");
 const checkLogin = require("./src/checkLogin");
 const textRef = "public/txt/vanasonad.txt";
 //const textRef2 = "public/txt/visitlog.txt";
 const app = express();
 //sessiooni kasutamine
 app.use(session({
-    secret: dbSession.sessionSecret,
+    secret: process.env.SES_SECRET,
     saveUninitialized: true,
     resave: true
 }));
@@ -22,25 +24,28 @@ app.use(express.static("public"));
 app.use(bodyparser.urlencoded({extended: true}));
 
 app.get("/", async (req, res)=>{
-    let conn;
+    //let conn;
     let latestPhoto = null;
     try{
-        conn = await mysql.createConnection(dbConf);
+        //conn = await mysql.createConnection(dbConf);
         const sqlReq = "SELECT filename, alttext FROM galleryphotos_aa WHERE id=(SELECT MAX(id) FROM galleryphotos_aa WHERE privacy=? AND deleted IS NULL)";
-        const [photoResult] = await conn.execute(sqlReq, [3]);
-        if(photoResult && photoResult.length > 0) {
-            latestPhoto = photoResult[0];
-        }
+        const privacy = 3;
+		const [rows, fields] = await pool.execute(sqlReq, [privacy]);
+		//console.log(rows);
+		let imgAlt = "Avalik foto";
+		if(rows[0].alttext != ""){
+			imgAlt = rows[0].alttext;
+		}
+		res.render("index", {imgFile: "gallery/normal/" + rows[0].filename, imgAlt: imgAlt});
     }
     catch(err){
         console.log("Viga foto laadimisel: " + err);
     } 
     finally {
-        if(conn) {
+        /* if(conn) {
             await conn.end();
-        }
+        } */
     }
-    res.render("index", {latestPhoto: latestPhoto});
 });
 
 //sisseloginud kasutajate avaleht

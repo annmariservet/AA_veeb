@@ -1,6 +1,7 @@
-const mysql = require("mysql2/promise");
-const dbInfo = require("../../../vp2025config");
-const dbConf = dbInfo.configData
+//const mysql = require("mysql2/promise");
+//const dbInfo = require("../../../vp2025config");
+//const dbConf = dbInfo.configData
+const pool = require("../src/dbPool");
 
 //@desc Home page for Estonian movie section
 //@route GET /eestifilm
@@ -15,13 +16,13 @@ const filmHomePage = (req, res)=>{
 //access public
 
 const filmPeople = async (req, res)=>{
-    let conn;
+    //let conn;
     const sqlReq = "select * from person";
     //let personList = [];
     try {
-        conn = await mysql.createConnection(dbConf);
-        console.log("Andmebaasiühendus loodud.");
-        const [rows, fields] = await conn.execute(sqlReq); //rows, seda oleme varem nimetanud sqlRes-iks
+        //conn = await mysql.createConnection(dbConf);
+        //console.log("Andmebaasiühendus loodud.");
+        const [rows, fields] = await pool.execute(sqlReq); //rows, seda oleme varem nimetanud sqlRes-iks
         res.render("filmiinimesed", {personList: rows});
     }
     catch(err) {
@@ -29,10 +30,10 @@ const filmPeople = async (req, res)=>{
         res.render("filmiinimesed", {personList: []});
     }
     finally {
-        if(conn){
+        /* if(conn){
             await conn.end();
             console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 };
 
@@ -49,20 +50,20 @@ const filmPeopleAdd = (req, res)=>{
 //access public
 
 const filmPeopleAddPost = async (req, res)=>{
-    let conn;
+    //let conn;
     let sqlReq = "insert into person (first_name, last_name, born, deceased) values (?,?,?,?)";
     if(!req.body.firstNameInput || !req.body.lastNameInput || !req.body.bornInput || req.body.bornInput > new Date()) {
         res.render("filmiinimesed_add", {notice: "Andmed on vigased!"});
         return;
     }
     try {
-        conn = await mysql.createConnection(dbConf);
-        console.log("Andmebaasiühendus loodud.");
+        //conn = await mysql.createConnection(dbConf);
+        //console.log("Andmebaasiühendus loodud.");
         let deceasedDate = null;
         if(req.body.deceasedInput != ""){
         deceasedDate = req.body.deceasedInput;
         }
-        const [result] = await conn.execute(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.bornInput.value, deceasedDate]);
+        const [result] = await pool.execute(sqlReq, [req.body.firstNameInput, req.body.lastNameInput, req.body.bornInput.value, deceasedDate]);
         console.log("Salvestati kirje id: " + result.insertId);
         res.render("filmiinimesed_add", {notice: "Andmed on salvestatud!"});
     }
@@ -71,10 +72,10 @@ const filmPeopleAddPost = async (req, res)=>{
         res.render("filmiinimesed_add", {notice: "Tekkis tehniline viga"});
     }
     finally {
-        if(conn){
+        /* if(conn){
         await conn.end();
         console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 };
 
@@ -83,12 +84,12 @@ const filmPeopleAddPost = async (req, res)=>{
 //access public
 
 const filmPosition = async (req, res)=>{
-    let conn;
+    //let conn;
     const sqlReq = "select * from `position`";
     try {
-        conn = await mysql.createConnection(dbConf);
-        console.log("Andmebaasiühendus loodud.");
-        const [rows, fields] = await conn.execute(sqlReq);
+        //conn = await mysql.createConnection(dbConf);
+        //console.log("Andmebaasiühendus loodud.");
+        const [rows, fields] = await pool.execute(sqlReq);
         res.render("ametid", {positionList: rows});
     }
     catch(err) {
@@ -96,10 +97,10 @@ const filmPosition = async (req, res)=>{
         res.render("ametid", {positionList: []});
     }
     finally {
-        if(conn){
+        /* if(conn){
             await conn.end();
             console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 
 };
@@ -117,7 +118,7 @@ const filmPositionAdd = (req, res)=>{
 //access public
 
 const filmPositionAddPost = async (req, res)=>{
-    let conn;
+    //let conn;
     let sqlReq = "insert into `position` (position_name, description) values (?,?)";
     let positionDescription = null;
     if(req.body.descriptionInput != ""){
@@ -125,13 +126,13 @@ const filmPositionAddPost = async (req, res)=>{
         return;
     }
     try {
-        conn = await mysql.createConnection(dbConf);
-        console.log("Andmebaasiühendus loodud.");
+        //conn = await mysql.createConnection(dbConf);
+        //console.log("Andmebaasiühendus loodud.");
         // let positionDescription = null;
         // if(req.body.descriptionInput != ""){
         //     positionDescription = req.body.descriptionInput;
         // }
-        const [result] = await conn.execute(sqlReq, [req.body.positionNameInput, positionDescription]);
+        const [result] = await pool.execute(sqlReq, [req.body.positionNameInput, positionDescription]);
         console.log("Salvestati kirje id: " + result.insertId);
         res.render("position_add", {notice: "Andmed on salvestatud!"});
     }
@@ -140,10 +141,10 @@ const filmPositionAddPost = async (req, res)=>{
         res.render("position_add", {notice: "Tekkis tehniline viga"});
     }
     finally {
-        if(conn){
+        /* if(conn){
         await conn.end();
         console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 };
 
@@ -152,12 +153,12 @@ const filmPositionAddPost = async (req, res)=>{
 //access public
 
 const estonianMovies = async (req, res)=>{
-    let conn;
+    //let conn;
     const sqlReq = "select * from movie";
     try {
-        conn = await mysql.createConnection(dbConf);
-        console.log("Andmebaasiühendus loodud.");
-        const [rows, fields] = await conn.execute(sqlReq);
+        //conn = await mysql.createConnection(dbConf);
+        //console.log("Andmebaasiühendus loodud.");
+        const [rows, fields] = await pool.execute(sqlReq);
         res.render("filmid", {movieList: rows});
     }
     catch(err) {
@@ -165,10 +166,10 @@ const estonianMovies = async (req, res)=>{
         res.render("filmid", {movieList: []});
     }
     finally {
-        if(conn){
+        /* if(conn){
             await conn.end();
             console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 
 };
@@ -186,7 +187,7 @@ const estonianMoviesAdd = (req, res)=>{
 //access public
 
 const estonianMoviesAddPost = async (req, res)=>{
-    let conn;
+    //let conn;
     let sqlReq = "insert into movie (title, production_year, duration, description) values (?,?,?,?)";
     let movieDescription = null;
     if(!req.body.movieNameInput || !req.body.movieDurationInput || !req.body.movieProductionYearInput) {
@@ -197,12 +198,12 @@ const estonianMoviesAddPost = async (req, res)=>{
         movieDescription = req.body.movieDescriptionInput;
     }
     try {
-        conn = await mysql.createConnection(dbConf);
-        console.log("Andmebaasiühendus loodud.");
+        //conn = await mysql.createConnection(dbConf);
+        //console.log("Andmebaasiühendus loodud.");
         // if(req.body.descriptionInput != ""){
         //     positionDescription = req.body.descriptionInput;
         // }
-        const [result] = await conn.execute(sqlReq, [req.body.movieNameInput, req.body.movieDurationInput, req.body.movieProductionYearInput, movieDescription]);
+        const [result] = await pool.execute(sqlReq, [req.body.movieNameInput, req.body.movieDurationInput, req.body.movieProductionYearInput, movieDescription]);
         console.log("Salvestati kirje id: " + result.insertId);
         res.render("filmid_add", {notice: "Andmed on salvestatud!"});
     }
@@ -211,10 +212,10 @@ const estonianMoviesAddPost = async (req, res)=>{
         res.render("filmid_add", {notice: "Tekkis tehniline viga"});
     }
     finally {
-        if(conn){
+       /*  if(conn){
             await conn.end();
             console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 };
 
@@ -223,10 +224,10 @@ const estonianMoviesAddPost = async (req, res)=>{
 //access public
 
 const movieRelations = async (req, res)=>{
-    let conn;
+    //let conn;
 
     try {
-        conn = await mysql.createConnection(dbConf);
+        //conn = await mysql.createConnection(dbConf);
         
     }
     catch{
@@ -234,10 +235,10 @@ const movieRelations = async (req, res)=>{
         res.render("seosed", {notice: "Tekkis tehniline viga"});
     }
     finally {
-        if(conn){
+        /* if(conn){
             await conn.end();
             console.log("Andmebaasi ühendus suletud.");
-        }
+        } */
     }
 } 
 

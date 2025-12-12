@@ -43,7 +43,7 @@ const galleryphotouploadPagePost = async (req, res)=>{
         conn = await mysql.createConnection(dbConf);
         let sqlReq = "INSERT INTO galleryphotos_aa (filename, origname, alttext, privacy, userid) VALUES (?,?,?,?,?)";
         //kuna kasutaja kontorid ja nende idsid veel pole 
-        const userId = 1;
+        const userId = req.session.userId;
         const [result] = await conn.execute(sqlReq, [fileName, req.file.originalname, req.body.altInput, req.body.privacyInput, userId]);
         console.log("Lisati foto id: " + result.insertId);
         res.render("galleryphotoupload"); //toob lehe ette

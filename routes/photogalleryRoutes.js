@@ -4,8 +4,11 @@ const router = express.Router();
 
 //kõik siinsed marsruudid kasutavad vahevara 
 router.use(checkLogin.isLogin);
-const {photogalleryPage} = require ("../controllers/photogalleryControllers");
+const {
+    photogalleryHome,
+    photogalleryPage} = require ("../controllers/photogalleryControllers");
 
-router.route("/").get(photogalleryPage);
+router.route("/").get(photogalleryHome);
+router.route("/:page").get(photogalleryPage);
 
 module.exports = router;
